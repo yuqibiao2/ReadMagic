@@ -125,7 +125,7 @@ public class ReaderManager {
         r.paramSet(TMConstants.TMR_PARAM_GEN2_TARI, tari);
 
         //--设置tagCoding
-        Gen2.TagEncoding tagenCoding = readerConfig.getTagenCoding();
+        Gen2.TagEncoding tagenCoding = readerConfig.getTagEncoding();
         r.paramSet(TMConstants.TMR_PARAM_GEN2_TAGENCODING, tagenCoding);
 
         //--设置target

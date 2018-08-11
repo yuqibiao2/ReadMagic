@@ -11,14 +11,14 @@ public class ReaderConfig {
 
     //天线
     private int[] antennaList = {1, 2, 3, 4};
-    //读写器读的功率（默认值3000）
+    //读写器读的功率（0~3150 默认值3000）
     private int readPower = 3000;
     //波特率
     private int baudRate;
-    
-    private Gen2.LinkFrequency blf = Gen2.LinkFrequency.LINK250KHZ;
+
+    private Gen2.LinkFrequency blf = Gen2.LinkFrequency.LINK320KHZ;
     private Gen2.Tari tari = Gen2.Tari.TARI_6_25US;
-    private Gen2.TagEncoding tagenCoding = Gen2.TagEncoding.FM0;
+    private Gen2.TagEncoding tagEncoding = Gen2.TagEncoding.FM0;
     private Gen2.Target target = Gen2.Target.A;
     private Gen2.Session session = Gen2.Session.S1;
 
@@ -62,12 +62,12 @@ public class ReaderConfig {
         this.tari = tari;
     }
 
-    public Gen2.TagEncoding getTagenCoding() {
-        return tagenCoding;
+    public Gen2.TagEncoding getTagEncoding() {
+        return tagEncoding;
     }
 
-    public void setTagenCoding(Gen2.TagEncoding tagenCoding) {
-        this.tagenCoding = tagenCoding;
+    public void setTagEncoding(Gen2.TagEncoding tagEncoding) {
+        this.tagEncoding = tagEncoding;
     }
 
     public Gen2.Target getTarget() {
