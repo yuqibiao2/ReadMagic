@@ -1,5 +1,8 @@
 package com.arfid.reader;
 
+import android.os.Handler;
+import android.os.Message;
+
 import com.thingmagic.Gen2;
 import com.thingmagic.ReadListener;
 import com.thingmagic.Reader;
@@ -20,6 +23,21 @@ import com.thingmagic.TagReadData;
  */
 public class ReaderManager {
 
+    private ReaderConfig readerConfig = new ReaderConfig();
+
+    private Handler mHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what) {
+                case 0:
+                    String epcStr = (String) msg.obj;
+                    mOnReaderListener.onReadEpc(epcStr);
+                    break;
+            }
+        }
+    };
+
     private ReaderManager() {
 
     }
@@ -34,8 +52,30 @@ public class ReaderManager {
 
     private Reader reader;
 
-    public void contect(String query) {
-        connect(query, new ReaderConfig());
+    private boolean isConnected = false;
+
+    /**
+     * 读写器是否已经连接
+     *
+     * @return
+     */
+    public boolean isConnected() {
+        return isConnected;
+    }
+
+    /**
+     * 读写器是否已经开始读取
+     */
+    private boolean isReaderStarted = false;
+
+    public boolean isReaderStarted() {
+
+        return isReaderStarted;
+    }
+
+    public Reader connect(String query) {
+
+        return connect(query, readerConfig);
     }
 
     /**
@@ -50,7 +90,11 @@ public class ReaderManager {
             Reader.setSerialTransport("tcp", new SerialTransportTCP.Factory());
             reader = Reader.create(query);
             reader.connect();
-            initReaderParam(reader, readerConfig);
+            setReaderParam(reader, readerConfig);
+            if (mOnReaderListener != null) {
+                mOnReaderListener.onSuccess();
+            }
+            isConnected = true;
             return reader;
         } catch (Exception ex) {
             if (mOnReaderListener != null) {
@@ -72,11 +116,16 @@ public class ReaderManager {
                 @Override
                 public void tagRead(Reader r, TagReadData t) {
                     if (mOnReaderListener != null) {
-                        mOnReaderListener.onReadEpc(t.epcString());
+                        Message msg = new Message();
+                        msg.what = 0;
+                        msg.obj = t.epcString();
+                        mHandler.sendMessage(msg);
+                        //mOnReaderListener.onReadEpc(t.epcString());
                     }
                 }
             });
         }
+        isReaderStarted = true;
     }
 
     /**
@@ -84,7 +133,20 @@ public class ReaderManager {
      */
     public void stopReader() {
         reader.stopReading();
+        isReaderStarted = false;
     }
+
+    /**
+     * 关闭单个Reader相关资源
+     */
+    public void closeReader() {
+        if (reader != null) {
+            reader.stopReading();
+            reader.destroy();
+        }
+        isConnected = false;
+    }
+
 
     /**
      * 设置天线参数
@@ -92,7 +154,8 @@ public class ReaderManager {
      * @param r
      * @throws ReaderException
      */
-    private void initReaderParam(Reader r, ReaderConfig readerConfig) throws Exception {
+    public void setReaderParam(Reader r, ReaderConfig readerConfig) throws Exception {
+        this.readerConfig = readerConfig;
         System.out.println("天线参数1===" + readerConfig);
         //---设置频点（NA：美标）
         String readerModel = (String) reader.paramGet("/reader/version/model");
@@ -136,6 +199,9 @@ public class ReaderManager {
 
     }
 
+    public ReaderConfig getReaderConfig() {
+        return readerConfig;
+    }
 
     private OnReaderListener mOnReaderListener;
 
@@ -145,6 +211,8 @@ public class ReaderManager {
 
     public interface OnReaderListener {
         void onReadEpc(String epc);
+
+        void onSuccess();
 
         void onFailed(Exception ex);
     }
