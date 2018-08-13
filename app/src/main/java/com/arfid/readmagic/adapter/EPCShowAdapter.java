@@ -12,8 +12,6 @@ import com.arfid.readmagic.bean.EPCBean;
 
 import java.util.List;
 
-import fuwit.com.ffreader.EPC;
-
 
 public class EPCShowAdapter extends BaseAdapter {
 
