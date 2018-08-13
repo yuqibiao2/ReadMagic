@@ -1,5 +1,6 @@
 package com.arfid.readmagic.ui;
 
+import android.app.ProgressDialog;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -85,6 +86,26 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected String getStr(int resId) {
 
         return getResources().getString(resId);
+    }
+
+    public void showLoadingDialog(String tip){
+        final ProgressDialog progressDialog = new ProgressDialog(this);
+        progressDialog.setTitle("操作");
+        progressDialog.setMessage(tip);
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(2000);
+                    progressDialog.dismiss();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
     }
 
 

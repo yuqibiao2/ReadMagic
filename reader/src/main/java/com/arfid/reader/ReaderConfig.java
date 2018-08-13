@@ -85,4 +85,15 @@ public class ReaderConfig {
     public void setSession(Gen2.Session session) {
         this.session = session;
     }
+
+    @Override
+    public String toString() {
+        return "antennaList："+antennaList+
+                "readPower："+readPower+
+                "blf："+blf+
+                "tari："+tari+
+                "tagEncoding："+tagEncoding+
+                "target："+target+
+                "session："+session;
+    }
 }
