@@ -49,7 +49,7 @@ public class MainActivity extends BaseActivity {
         epcList = new ArrayList<>();
         application = (MyApplication) getApplication();
         //1.得到readerManager实例
-        readerManager = ReaderManager.getInstance();
+        ReaderManager readerManager = ReaderManager.getInstance();
     }
 
     @Override

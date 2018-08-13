@@ -15,7 +15,7 @@ import com.thingmagic.TagProtocol;
 import com.thingmagic.TagReadData;
 
 /**
- * 功能：
+ * 功能：读写器管理类
  *
  * @author yu
  * @version 1.0
